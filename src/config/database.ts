@@ -1,8 +1,8 @@
 import { Sequelize } from "sequelize";
 
-const dataBase = process.env.DATABASE || "security-database";
-const username = process.env.USERNAME || "microservice";
-const password = process.env.PASSWORD || "root";
+const dataBase = "security-database";
+const username = "microservice";
+const password = "root";
 
 export const sequelize = new Sequelize(dataBase, username, password, {
   dialect: "postgres",
