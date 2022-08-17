@@ -1,5 +1,4 @@
 interface InterfaceRequest { 
-    userNmae: string;
-    email: string; 
+    login: string;
     password: string;
 }
