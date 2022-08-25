@@ -1,12 +1,20 @@
-import { Sequelize } from "sequelize";
+import "dotenv/config";
+import "reflect-metadata";
+import { DataSource } from "typeorm";
 
-const dataBase = "security-database";
-const username = "microservice";
-const password = "root";
-
-export const sequelize = new Sequelize(dataBase, username, password, {
-  dialect: "postgres",
+const dataSource = new DataSource({
+  name: "security",
+  type: "postgres",
+  host: "localhost",
   port: 5432,
+  username: "microservice",
+  password: "microservice",
+  database: "security-database",
+  logging: true,
+  dropSchema: false,
+  migrationsRun: false,
+  entities: ["./src/models/*.ts"],
+  migrations: ["./src/migrations/*.ts"],
 });
 
-sequelize.authenticate();
+export { dataSource };

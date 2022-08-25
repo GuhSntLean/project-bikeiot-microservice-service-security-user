@@ -1,5 +1,3 @@
-class CreateUserController {
+class CreateUserController {}
 
-}
-
-export {CreateUserController} 
+export { CreateUserController };
