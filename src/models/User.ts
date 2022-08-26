@@ -9,9 +9,6 @@ class User {
   id: string;
 
   @Column()
-  publicId: string;
-
-  @Column()
   username: string;
   
   @Column()
