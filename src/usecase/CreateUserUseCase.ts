@@ -1,3 +1,8 @@
-class CreateUserUseCase {}
+
+class CreateUserUseCase {
+    async createUser ({  }: InterfaceUser) {
+        
+    }
+}
 
 export { CreateUserUseCase };
