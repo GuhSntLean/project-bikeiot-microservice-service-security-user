@@ -1,0 +1,5 @@
+class GenerateTokenProvider {
+
+}
+
+export {GenerateTokenProvider}

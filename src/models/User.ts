@@ -1,20 +1,19 @@
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity('user')
-@Unique(['publicId', 'username', 'email'])
+@Unique([ 'username', 'email'])
 class User {
 
-  // @PrimaryGeneratedColumn('uuid')
-  @Column({primary: true, generated: 'uuid'})
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({type:'text'})
   username: string;
   
-  @Column()
+  @Column({type:'text'})
   email: string;
   
-  @Column()
+  @Column({type:'text'})
   password: string;
 }
 
