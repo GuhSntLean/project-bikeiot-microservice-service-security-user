@@ -1,7 +1,7 @@
 {
   "name": "security-microservice",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server/server.ts",
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev src/server/server.ts"
