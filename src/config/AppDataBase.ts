@@ -1,9 +1,10 @@
 import "dotenv/config";
 import "reflect-metadata";
+import { ConnectionOptions } from "tls";
 import { DataSource } from "typeorm";
 
-const dataSource = new DataSource({
-  name: "security",
+const AppDataBase = new DataSource({
+  name: "developer",
   type: "postgres",
   host: "localhost",
   port: 5432,
@@ -12,9 +13,10 @@ const dataSource = new DataSource({
   database: "security-database",
   logging: true,
   dropSchema: false,
+  synchronize: false,
   migrationsRun: false,
-  entities: ["./src/models/*.ts"],
+  entities: ["./src/models/"],
   migrations: ["./src/migrations/*.ts"],
 });
 
-export { dataSource };
+export { AppDataBase };

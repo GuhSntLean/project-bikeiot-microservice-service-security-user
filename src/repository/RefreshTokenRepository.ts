@@ -1,6 +1,6 @@
-import { dataSource } from "../config/database";
+import { AppDataBase } from "../config/AppDataBase";
 import { RefreshToken } from "../models/RefreshToken";
 
-const refreshTokenRepository = dataSource.getRepository(RefreshToken);
+const refreshTokenRepository = AppDataBase.getRepository(RefreshToken);
 
 export { refreshTokenRepository };

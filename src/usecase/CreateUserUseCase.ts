@@ -27,9 +27,6 @@ class CreateUserUseCase {
       throw new Error("error with database");
     }
   }
-
-  async updateUser(id: string, { userName, email, password }: InterfaceUser) {}
-  async deleteUser(id: string, userName: string) {}
 }
 
 export { CreateUserUseCase };

@@ -1,14 +1,14 @@
 import { app, httpServer } from "./app";
 import os from "os";
-import { dataSource } from "../config/database";
+import { AppDataBase } from "../config/AppDataBase";
 
-const server = () => {
+const server = async () => {
   try {
-    dataSource.initialize().then(() => {
+    AppDataBase.initialize().then(() => {
       httpServer.listen(app.get("port"), () => {
         return console.info(
           `Server is running at port http://${
-            os.networkInterfaces().lo[0].address
+            os.hostname
           }:${app.get("port")}`
         );
       });
