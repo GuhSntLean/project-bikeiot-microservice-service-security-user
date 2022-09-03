@@ -1,16 +1,19 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./User";
+import { Column, Entity, PrimaryColumn } from "typeorm";
+import { v4 as uuid } from "uuid";
 
 @Entity("refresh_token")
 class RefreshToken {
+  @PrimaryColumn()
+  id: string;
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @Column({ type: "number" })
+  expireIn: number;
 
-    @Column({type:'number'})
-    expireIn: number
-    
-    user: User
+  constructor() {
+    if (!this.id) {
+      this.id = uuid();
+    }
+  }
 }
 
 export { RefreshToken };

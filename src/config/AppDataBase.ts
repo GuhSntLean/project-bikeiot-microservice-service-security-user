@@ -1,6 +1,5 @@
 import "dotenv/config";
 import "reflect-metadata";
-import { ConnectionOptions } from "tls";
 import { DataSource } from "typeorm";
 
 const AppDataBase = new DataSource({
