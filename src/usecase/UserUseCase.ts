@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 import { userRepository } from "../repository/UserRepository";
 
-class CreateUserUseCase {
+class UserUseCase {
   async createUser({ userName, email, password }: InterfaceUser) {
     // procurando se o cliente existe caso exista volta uma exexption
     const userAlreadyExist = await userRepository.find({
@@ -29,4 +29,4 @@ class CreateUserUseCase {
   }
 }
 
-export { CreateUserUseCase };
+export { UserUseCase };
