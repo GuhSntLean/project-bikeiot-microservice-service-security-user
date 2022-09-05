@@ -1,23 +1,21 @@
 import {
   Column,
   Entity,
-  PrimaryColumn,
-  Unique,
+  PrimaryColumn
 } from "typeorm";
 import { v4 as uuid } from "uuid";
-@Entity("user")
-@Unique(["username", "email"])
+@Entity("users")
 class User {
   @PrimaryColumn()
   id: string;
 
-  @Column({ type: "text" })
+  @Column({ name:"user_name", type: "text", unique: true })
   userName: string;
 
-  @Column({ type: "text" })
+  @Column({ name: "email", type: "text", unique: true })
   email: string;
 
-  @Column({ type: "text" })
+  @Column({ name: "password", type: "text" })
   password: string;
 
   constructor() {

@@ -1,13 +1,21 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
+import { User } from "./User";
 
 @Entity("refresh_token")
 class RefreshToken {
   @PrimaryColumn()
   id: string;
 
-  @Column({ type: "number" })
-  expireIn: number;
+  @Column({ name: "refresh_token", type: "string"})
+  refreshToken: string;
+
+  @Column({ name: "expire_in", type: "date" })
+  expireIn: Date;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: "user_id" })
+  user: User;
 
   constructor() {
     if (!this.id) {
