@@ -7,7 +7,7 @@ class RefreshToken {
   @PrimaryColumn()
   id: string;
 
-  @Column({ name: "refresh_token", type: "string"})
+  @Column({ name: "refresh_token"})
   refreshToken: string;
 
   @Column({ name: "expire_in", type: "date" })

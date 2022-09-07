@@ -1,30 +1,43 @@
 import { hash } from "bcrypt";
+import { UserProvider } from "../provider/UserProvider";
 import { userRepository } from "../repository/UserRepository";
-
+import { InterfaceUser } from "../interfaces/InterfaceUser";
 class UserUseCase {
   async createUser({ userName, email, password }: InterfaceUser) {
-    // procurando se o cliente existe caso exista volta uma exexption
-    const userAlreadyExist = await userRepository.find({
-      where: [{ userName }, { email }],
-    });
+    // Verificando se o usuario existe com E-MAIL e USUARIO
 
-    console.log(userAlreadyExist);
-    
-    if (userAlreadyExist) {
-      throw new Error("Verify informations");
+    const providerValidation = new UserProvider();
+    const existUserName = await userRepository.findOneBy({ userName: userName });
+    const existEmail = await userRepository.findOneBy({ email });
+
+    console.log("esta no create user")
+
+    if (existUserName) {
+      return new Error("User already exists or irreguar");
     }
-    try {
-      const passwordBcrypt = await hash(password, 8);
 
-      const user = await userRepository.create({
+    if (existEmail && providerValidation.emailValidation(email)) {
+      return new Error("Email already exists or irregular");
+    }
+
+    if (providerValidation.passwordValidation(password)) {
+      return new Error("Password invalid format");
+    }
+
+    try {
+      const passwordHash = await hash(password, 8);
+
+      const newUser = userRepository.create({
         userName,
         email,
-        password: passwordBcrypt,
+        password: passwordHash,
       });
 
-      console.info(`create user ${user}`);
+      await userRepository.save(newUser);
+
+      return newUser;
     } catch (error) {
-      throw new Error("error with database");
+      console.log(`Error message: ${error}`);
     }
   }
 }

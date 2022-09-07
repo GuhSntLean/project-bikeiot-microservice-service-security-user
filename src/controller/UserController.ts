@@ -3,10 +3,20 @@ import { UserUseCase } from "../usecase/UserUseCase";
 
 class UserController {
   async createUser(request: Request, response: Response) {
-    // const { user_name, email, password } = request.body;
-    const userUseCase = new UserUseCase();
+    try {
+      const { userName, email, password } = request.body;
+      const userUseCase = new UserUseCase();
+      const result = await userUseCase.createUser({userName, email, password});
 
-    return response.status(201).json({});
+      if(result instanceof Error){
+        return response.status(400).json(result.message);
+      }
+
+      return response.status(201).json(result);
+    } catch (error) {
+      console.log(error);
+      return response.json(error );
+    }
   }
 }
 
