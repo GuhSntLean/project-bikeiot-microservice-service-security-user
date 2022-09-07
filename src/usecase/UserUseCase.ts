@@ -8,19 +8,18 @@ class UserUseCase {
 
     const providerValidation = new UserProvider();
     const existUserName = await userRepository.findOneBy({ userName: userName });
-    const existEmail = await userRepository.findOneBy({ email });
-
-    console.log("esta no create user")
+    const existEmail = await userRepository.findOneBy({ email: email });
 
     if (existUserName) {
       return new Error("User already exists or irreguar");
     }
 
-    if (existEmail && providerValidation.emailValidation(email)) {
+    if (existEmail || !providerValidation.emailValidation(email)) {
       return new Error("Email already exists or irregular");
     }
 
-    if (providerValidation.passwordValidation(password)) {
+    console.log(providerValidation.passwordValidation(password))
+    if (!providerValidation.passwordValidation(password)) {
       return new Error("Password invalid format");
     }
 

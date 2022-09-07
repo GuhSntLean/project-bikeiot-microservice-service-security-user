@@ -1,7 +1,6 @@
 class UserProvider {
   emailValidation(email: string) {
-    let regexValidation =
-      /^([a-z]){1,}([a-z0-9._-]){1,}([@]){1}([a-z]){2,}([.]){1}([a-z]){2,}([.]?){1}([a-z]?){2,}$/i;
+    let regexValidation = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
     if (regexValidation.test(email)) {
       return true;
     }
@@ -9,8 +8,7 @@ class UserProvider {
   }
 
   passwordValidation(password: string) {
-    let regex =
-      /^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$/;
+    let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
     if (password.length >= 8) {
       if (regex.test(password)) {
         return true;
