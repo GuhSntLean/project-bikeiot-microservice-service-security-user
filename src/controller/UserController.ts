@@ -6,18 +6,27 @@ class UserController {
     try {
       const { userName, email, password } = request.body;
       const userUseCase = new UserUseCase();
-      const result = await userUseCase.createUser({userName, email, password});
+      const result = await userUseCase.createUser({
+        userName,
+        email,
+        password,
+      });
 
-      if(result instanceof Error){
+      if (result instanceof Error) {
         return response.status(400).json(result.message);
       }
 
       return response.status(201).json(result);
     } catch (error) {
       console.log(error);
-      return response.json(error );
+      return response.json(error);
     }
   }
+
+  async updateUser(request: Request, response: Response) {}
+  async resetPassword(request: Request, response: Response) {}
+  async forgotPassword(request: Request, response: Response) {}
+  async resetForgotPassword(request: Request, response: Response) {}
 }
 
 export { UserController };
