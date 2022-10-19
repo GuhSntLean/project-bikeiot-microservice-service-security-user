@@ -3,6 +3,7 @@ import { UserProvider } from "../provider/UserProvider";
 import { userRepository } from "../repository/UserRepository";
 import { InterfaceUser } from "../interfaces/InterfaceUser";
 class UserUseCase {
+
   async createUser({ userName, email, password }: InterfaceUser) {
     // Verificando se o usuario existe com E-MAIL e USUARIO
 
@@ -39,6 +40,8 @@ class UserUseCase {
       console.log(`Error message: ${error}`);
     }
   }
+
+  async updateUser () {}
 }
 
 export { UserUseCase };
