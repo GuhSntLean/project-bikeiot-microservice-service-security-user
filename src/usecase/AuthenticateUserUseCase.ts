@@ -1,13 +1,30 @@
-import { hash } from 'bcrypt';
-
+import { compare } from "bcrypt";
+import { UserProvider } from "../provider/UserProvider";
+import { userRepository } from "../repository/UserRepository";
 
 class AuthenticateUserUseCase {
+  async loginVerify ({ login, password }: InterfaceRequest) {
+    const providerValidation = new UserProvider();
 
-  async execute({ login, password }: InterfaceRequest) {
-    
-    const passwordCrypt = await hash(password, 8);
+    let user = null; 
 
+    if(providerValidation.emailValidation(login)){
+      user = await userRepository.findOneBy({
+        email: login,
+      });
+    }else{
+      user = await userRepository.findOneBy({
+        userName: login,
+      }); 
+    } 
     
+    const passwordPass = await compare(password , user.password);
+
+    if(!user && !passwordPass) {
+      return new Error("Login or password invalid");
+    }
+
+    return true;
   }
 }
 

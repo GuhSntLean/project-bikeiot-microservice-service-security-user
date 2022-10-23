@@ -1,13 +1,7 @@
 class RefreshTokenUseCase {
-    async createRefreshToken() {
+  async createRefreshToken() {}
 
-    }
-
-    revokeRoten() {
-
-    }
+  async verifyToken() {}
 }
-
-
 
 export { RefreshTokenUseCase };

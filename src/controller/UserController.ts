@@ -23,7 +23,17 @@ class UserController {
     }
   }
 
-  async updateUser(request: Request, response: Response) {}
+  async updateUser(request: Request, response: Response) {
+    try {
+      const infoUser = request.body;
+      
+
+    } catch (error) {
+      console.log(error);
+      return response.json(error);
+    }
+  }
+
   async resetPassword(request: Request, response: Response) {}
   async forgotPassword(request: Request, response: Response) {}
   async resetForgotPassword(request: Request, response: Response) {}
