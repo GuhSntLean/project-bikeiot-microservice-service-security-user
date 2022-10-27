@@ -7,12 +7,10 @@ const server = async () => {
     AppDataBase.initialize().then(() => {
       httpServer.listen(app.get("port"), () => {
         return console.info(
-          `Server is running at port http://${
-            os.hostname
-          }:${app.get("port")}`
+          `Server is running at port http://${os.hostname}:${app.get("port")}`
         );
       });
-    })
+    });
   } catch (error) {
     console.error(`Error: ${error}`);
   }
