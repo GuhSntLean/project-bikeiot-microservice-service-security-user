@@ -40,6 +40,7 @@ class UserUseCase {
       return newUser;
     } catch (error) {
       console.log(`Error message: ${error}`);
+      return new Error("Error save User");
     }
   }
 

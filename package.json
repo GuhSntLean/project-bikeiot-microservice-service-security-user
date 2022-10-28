@@ -5,10 +5,7 @@
    "license": "MIT",
    "scripts": {
       "dev": "ts-node-dev src/server/server.ts",
-      "migration:generate": "typeorm-ts-node-commonjs -d ./src/config/AppDataBase.ts migration:generate ./src/models",
-      "migration:run": "typeorm-ts-node-commonjs -d ./src/config/AppDataBase.ts migration:run",
-      "typeorm": "ts-node-dev ./node_modules/typeorm/cli",
-      "typeor-mmigration": "yarn exec -- ts-node node_modules/typeorm/cli migration:revert -d ./src/config/AppDataBase.ts"
+      "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js -d ./src/config/AppDataSource.ts"
    },
    "devDependencies": {
       "@types/bcrypt": "^5.0.0",
