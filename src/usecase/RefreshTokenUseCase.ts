@@ -1,5 +1,5 @@
 class RefreshTokenUseCase {
-  async createRefreshToken() {}
+  async generateRefreshToken() {}
 
   async verifyToken() {}
 }

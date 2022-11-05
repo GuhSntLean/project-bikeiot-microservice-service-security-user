@@ -1,3 +1,0 @@
-class GenerateRefreshTokenProvider {}
-
-export { GenerateRefreshTokenProvider };
