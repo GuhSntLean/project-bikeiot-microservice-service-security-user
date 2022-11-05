@@ -39,14 +39,12 @@ class UserUseCase {
 
       return newUser;
     } catch (error) {
-      console.log(`Error message: ${error}`);
       return new Error("Error save User");
     }
   }
 
   async updateUser(id: string, { userName, email }: InterfaceUser) {
-    // TODO: fazer validação de com outros usuarios
-    
+    // TODO: validando com outro usuarios
     const user = await userRepository.findOneBy({ id: id });
 
     if (user) {

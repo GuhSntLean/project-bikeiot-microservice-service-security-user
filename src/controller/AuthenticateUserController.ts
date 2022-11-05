@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AuthenticateUserUseCase } from "../usecase/AuthenticateUserUseCase";
+import { InterfaceRequest } from "../interfaces/InterfaceRequest";
 
 class AuthenticateUserController {
   async authentication(request: Request, response: Response) {

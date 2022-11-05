@@ -1,13 +1,14 @@
 import { compare } from "bcrypt";
-import { sign } from "jsonwebtoken";
+import { RefreshTokenProvider } from "../provider/RefreshTokenProvider";
 import { TokenProvider } from "../provider/TokenProvider";
 import { UserProvider } from "../provider/UserProvider";
 import { userRepository } from "../repository/UserRepository";
+import { InterfaceRequest } from "../interfaces/InterfaceRequest";
 
 class AuthenticateUserUseCase {
   async authenticate({ login, password }: InterfaceRequest) {
     let user = null;
-    
+
     // Verficando se o usuario é existente
     const providerValidation = new UserProvider();
     if (providerValidation.emailValidation(login)) {
@@ -35,8 +36,10 @@ class AuthenticateUserUseCase {
     const token = tokenProvider.execute(user.id);
 
     // Gerando um refreshtoken
+    const refreshTokenProvider = new RefreshTokenProvider();
+    const refreshToken = refreshTokenProvider.execute(user.id);
 
-    return token;
+    return { token, refreshToken };
   }
 }
 
