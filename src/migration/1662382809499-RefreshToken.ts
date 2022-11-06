@@ -12,10 +12,6 @@ export class RefreshToken1662382809499 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: "refresh_token",
-            type: "varchar",
-          },
-          {
             name: "user_id",
             type: "uuid",
           },
