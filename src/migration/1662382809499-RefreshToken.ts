@@ -17,7 +17,7 @@ export class RefreshToken1662382809499 implements MigrationInterface {
           },
           {
             name: "expire_in",
-            type: "timestamp",
+            type: "bigint",
           },
         ],
         foreignKeys: [

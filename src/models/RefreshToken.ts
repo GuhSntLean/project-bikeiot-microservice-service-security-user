@@ -7,12 +7,12 @@ class RefreshToken {
   @PrimaryColumn()
   id: string;
 
-  @Column({ name: "expire_in", type: "date" })
-  expireIn: Date;
+  @Column({ name: "expire_in", type: "double" })
+  expireIn: number;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: "user_id" })
-  user: User;
+  userId: User;
 
   constructor() {
     if (!this.id) {

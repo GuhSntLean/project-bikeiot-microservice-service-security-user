@@ -4,11 +4,11 @@ import { refreshTokenRepository } from "../repository/RefreshTokenRepository";
 class RefreshTokenUseCase {
   async generateRefreshToken(userId: string) {
     const existRefreshToken = refreshTokenRepository.find({
-      where: { user: { id: userId } },
+      where: { userId: { id: userId } },
     });
 
     if (existRefreshToken) {
-      refreshTokenRepository.delete({ user: { id: userId } });
+      refreshTokenRepository.delete({ userId: { id: userId } });
     }
   }
 
@@ -22,7 +22,7 @@ class RefreshTokenUseCase {
     }
 
     const tokenProvider = new TokenProvider();
-    const token = tokenProvider.execute(existRefreshToken.user.id);
+    const token = tokenProvider.execute(existRefreshToken.userId.id);
 
     return token;
   }

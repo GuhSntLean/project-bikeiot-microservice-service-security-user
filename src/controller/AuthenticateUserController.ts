@@ -1,21 +1,44 @@
 import { Request, Response } from "express";
 import { AuthenticateUserUseCase } from "../usecase/AuthenticateUserUseCase";
 import { InterfaceRequest } from "../interfaces/InterfaceRequest";
+import { TokenProvider } from "../provider/TokenProvider";
+import { RefreshTokenProvider } from "../provider/RefreshTokenProvider";
 
 class AuthenticateUserController {
   async authentication(request: Request, response: Response) {
     const { username, password } = request.body;
 
-    const authenticateUserUseCase = new AuthenticateUserUseCase();
+    if (!username && !password) {
+      return new Error("Error generate refreshtoken or token");
+    }
 
     const intefaceLogin: InterfaceRequest = {
       login: username,
       password,
     };
 
-    const token = await authenticateUserUseCase.authenticate(intefaceLogin);
+    try {
+      const authenticateUserUseCase = new AuthenticateUserUseCase();
+      const userId: any = await authenticateUserUseCase.authenticate(
+        intefaceLogin
+      );
 
-    return response.json(token); 
+      if (!(typeof userId === "string")) {
+        return new Error("Error generate refreshtoken or token");
+      }
+
+      //  Gerando um tokem para o usuario
+      const tokenProvider = new TokenProvider();
+      const token = tokenProvider.execute(userId);
+
+      // Gerando um refreshtoken
+      const refreshTokenProvider = new RefreshTokenProvider();
+      const refreshToken = await refreshTokenProvider.execute(userId);
+
+      return response.json({ token, refreshToken });
+    } catch (error) {
+      return new Error("Error generate refreshtoken or token");
+    }
   }
 }
 

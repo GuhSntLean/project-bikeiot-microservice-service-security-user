@@ -31,15 +31,14 @@ class AuthenticateUserUseCase {
       return new Error("Login or password invalid");
     }
 
-    //  Gerando um tokem para o usuario
-    const tokenProvider = new TokenProvider();
-    const token = tokenProvider.execute(user.id);
+    let idUser = null;
 
-    // Gerando um refreshtoken
-    const refreshTokenProvider = new RefreshTokenProvider();
-    const refreshToken = refreshTokenProvider.execute(user.id);
+    if (user.id) {
+      idUser = user.id;
+      return idUser;
+    }
 
-    return { token, refreshToken };
+    return null;
   }
 }
 
