@@ -10,7 +10,7 @@ class RefreshToken {
   @Column({ name: "expire_in", type: "date" })
   expireIn: Date;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: "user_id" })
   user: User;
 
