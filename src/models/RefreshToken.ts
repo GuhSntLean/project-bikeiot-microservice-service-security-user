@@ -7,7 +7,7 @@ class RefreshToken {
   @PrimaryColumn()
   id: string;
 
-  @Column({ name: "expire_in", type: "double" })
+  @Column({ name: "expire_in", type: "bigint" })
   expireIn: number;
 
   @ManyToOne(() => User, (user) => user.id)
