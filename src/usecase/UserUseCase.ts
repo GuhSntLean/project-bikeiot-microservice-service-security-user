@@ -3,9 +3,11 @@ import { UserProvider } from "../provider/UserProvider";
 import { userRepository } from "../repository/UserRepository";
 import { InterfaceUser } from "../interfaces/InterfaceUser";
 import { User } from "../models/User";
+import { RabbitmqServer } from "../server/RabbitmqServer";
 class UserUseCase {
   async createUser({ userName, email, password }: InterfaceUser) {
     // Verificando se o usuario existe com E-MAIL e USUARIO
+    const serverAmqp = new RabbitmqServer();
 
     const providerValidation = new UserProvider();
     const existUserName = await userRepository.findOneBy({
@@ -37,6 +39,9 @@ class UserUseCase {
 
       await userRepository.save(newUser);
 
+      await serverAmqp.start();
+      await serverAmqp.publishExchange('common.user', JSON.stringify(newUser));
+      
       return newUser;
     } catch (error) {
       return new Error("Error save User");

@@ -4,14 +4,14 @@ class RabbitmqServer {
   private conn: Connection;
   private channel: Channel;
 
-  constructor(private uri: string) {}
-
   async start() {
-    this.conn = await connect(this.uri);
+    this.conn = await connect('amqp://guest:guest@localhost:5672');
     this.channel = await this.conn.createChannel();
   }
 
-  async publishExchange(exchange: string, routingKey: string, message: string) {
-    return this.channel.publish(exchange, routingKey, Buffer.from(message));
+  async publishExchange(exchange: string, message: string) {
+    return this.channel.publish(exchange, '', Buffer.from(message));
   }
 }
+
+export { RabbitmqServer };
