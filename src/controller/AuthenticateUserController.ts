@@ -11,7 +11,7 @@ class AuthenticateUserController {
     if (!username && !password) {
       return response
         .status(401)
-        .json({ error: "Error generate refreshtoken or token" });
+        .json({ error: "Login Or Passoword incorrect" });
     }
 
     const intefaceLogin: InterfaceRequest = {
@@ -23,10 +23,11 @@ class AuthenticateUserController {
       const authenticateUserUseCase = new AuthenticateUserUseCase();
       const userId: any = await authenticateUserUseCase.authenticate(intefaceLogin);
 
+      console.log(userId);
       if (!(typeof userId === "string")) {
         return response
           .status(401)
-          .json({ error: "Error generate refreshtoken or token" });
+          .json({ error: userId.message });
       }
 
       //  Gerando um tokem para o usuario
