@@ -7,9 +7,11 @@ import { RefreshTokenProvider } from "../provider/RefreshTokenProvider";
 class AuthenticateUserController {
   async authentication(request: Request, response: Response) {
     const { username, password } = request.body;
-
+    console.log("Entrou");
     if (!username && !password) {
-      return new Error("Error generate refreshtoken or token");
+      return response
+        .status(401)
+        .json({ error: "Error generate refreshtoken or token" });
     }
 
     const intefaceLogin: InterfaceRequest = {
@@ -19,12 +21,12 @@ class AuthenticateUserController {
 
     try {
       const authenticateUserUseCase = new AuthenticateUserUseCase();
-      const userId: any = await authenticateUserUseCase.authenticate(
-        intefaceLogin
-      );
+      const userId: any = await authenticateUserUseCase.authenticate(intefaceLogin);
 
       if (!(typeof userId === "string")) {
-        return new Error("Error generate refreshtoken or token");
+        return response
+          .status(401)
+          .json({ error: "Error generate refreshtoken or token" });
       }
 
       //  Gerando um tokem para o usuario
