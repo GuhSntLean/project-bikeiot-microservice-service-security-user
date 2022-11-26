@@ -1,17 +1,21 @@
 import { hash } from "bcrypt";
 import { UserProvider } from "../provider/UserProvider";
 import { userRepository } from "../repository/UserRepository";
-import { InterfaceUser } from "../interfaces/InterfaceUser";
+import {
+  InterfaceUser,
+  InterfaceUserUpdate,
+  InterfaceUserReturnResult,
+} from "../interfaces/InterfaceUser";
 import { User } from "../models/User";
 import { RabbitmqServer } from "../server/RabbitmqServer";
 class UserUseCase {
-  async createUser({ userName, email, password }: InterfaceUser) {
+  async createUser({ username, email, password }: InterfaceUser) {
     // Verificando se o usuario existe com E-MAIL e USUARIO
     const serverAmqp = new RabbitmqServer();
 
     const providerValidation = new UserProvider();
     const existUserName = await userRepository.findOneBy({
-      userName: userName,
+      userName: username,
     });
     const existEmail = await userRepository.findOneBy({ email: email });
 
@@ -32,7 +36,7 @@ class UserUseCase {
       const passwordHash = await hash(password, 8);
 
       const newUser = userRepository.create({
-        userName,
+        userName: username,
         email,
         password: passwordHash,
       });
@@ -40,50 +44,46 @@ class UserUseCase {
       await userRepository.save(newUser);
 
       await serverAmqp.start();
-      await serverAmqp.publishExchange('common.user', JSON.stringify(newUser));
-      
-      return newUser;
+      await serverAmqp.publishExchange("common.user", JSON.stringify(newUser));
+
+      const returnUser: InterfaceUserReturnResult = {
+        id: newUser.id,
+        username: newUser.userName,
+        email: newUser.email,
+      };
+
+      return returnUser;
     } catch (error) {
       return new Error("Error save User");
     }
   }
 
-  async updateUser(id: string, { userName, email }: InterfaceUser) {
+  async updateUser(id: string, { username, email }: InterfaceUserUpdate) {
     // TODO: validando com outro usuarios
-    const user = await userRepository.findOneBy({ id: id });
+    const serverAmqp = new RabbitmqServer();
 
-    if (user) {
-      try {
-        await userRepository
-          .createQueryBuilder()
-          .update(User)
-          .set({
-            userName: userName || user.userName,
-            email: email || user.email,
-          })
-          .where("id = id:", { id: id })
-          .execute();
-        return true;
-      } catch (error) {
-        console.log(`Error message: ${error}`);
-        return false;
-      }
-    }
-  }
-
-  async getUser(id: string) {
     const user = await userRepository.findOneBy({ id: id });
 
     if (!user) {
-      return "false";
+      return new Error("User not found");
     }
-    return user;
-  }
 
-  async getListUser() {
-    const users = await userRepository.find();
+    try {
+      userRepository.update;
+      const result = await userRepository
+        .createQueryBuilder()
+        .update(User)
+        .set({
+          userName: username || user.userName,
+          email: email || user.email,
+        })
+        .where("id = :id", { id: id })
+        .execute();
 
-    return users;
+      return result;
+    } catch (error) {
+      return new Error("Error save User");
+    }
   }
 }
 

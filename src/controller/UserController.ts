@@ -4,10 +4,11 @@ import { UserUseCase } from "../usecase/UserUseCase";
 class UserController {
   async createUser(request: Request, response: Response) {
     try {
-      const { userName, email, password } = request.body;
+      const { username, email, password } = request.body;
+
       const userUseCase = new UserUseCase();
       const result = await userUseCase.createUser({
-        userName,
+        username: username,
         email,
         password,
       });
@@ -25,18 +26,21 @@ class UserController {
 
   async updateUser(request: Request, response: Response) {
     try {
-      const infoUser = request.body;
-      
+      const { id, username, email } = request.body;
 
+      const userUseCase = new UserUseCase();
+      const result = await userUseCase.updateUser(id, { username, email });
+
+      if (result instanceof Error) {
+        return response.status(400).json(result.message);
+      }
+
+      return response.status(201).json(result);
     } catch (error) {
       console.log(error);
-      return response.json(error);
+      return response.status(500).json(error);
     }
   }
-
-  async resetPassword(request: Request, response: Response) {}
-  async forgotPassword(request: Request, response: Response) {}
-  async resetForgotPassword(request: Request, response: Response) {}
 }
 
 export { UserController };

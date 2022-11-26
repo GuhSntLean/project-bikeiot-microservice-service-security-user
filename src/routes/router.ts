@@ -15,10 +15,14 @@ routes.post("/login", authenticate.authentication);
 routes.post("/register", userController.createUser); // criando usuario
 routes.post("/refresh-token", refreshToken.refreshToken);
 
+routes.put('/update-user', userController.updateUser);
+
 // Necessidade de login
 routes.get("/user"); // pegando informações do usuario usuario
 routes.post("/user"); // modificando usuario (username, email)
 routes.put("/user"); // modificando usuario (username, email)
+
+routes.put('/update-user', userController.updateUser);
 
 routes.post("/change-password"); // modificando password do usuario
 routes.post("/forgot-password"); // caso tenha esquecido a senha

@@ -1,7 +1,18 @@
 interface InterfaceUser {
-  userName: string;
+  username: string;
   email: string;
   password: string;
 }
 
-export { InterfaceUser };
+interface InterfaceUserUpdate {
+  username: string;
+  email: string;
+}
+
+interface InterfaceUserReturnResult { 
+  id: string;
+  username: string;
+  email: string;
+}
+
+export { InterfaceUser, InterfaceUserUpdate, InterfaceUserReturnResult };
