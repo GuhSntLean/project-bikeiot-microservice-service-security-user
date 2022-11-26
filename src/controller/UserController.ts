@@ -28,6 +28,10 @@ class UserController {
     try {
       const { id, username, email } = request.body;
 
+      if (!id || !email || !username) {
+        return response.status(500).json("Field is missing");
+      }
+
       const userUseCase = new UserUseCase();
       const result = await userUseCase.updateUser(id, { username, email });
 
@@ -36,6 +40,28 @@ class UserController {
       }
 
       return response.status(201).json(result);
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json(error);
+    }
+  }
+
+  async changePassword(request: Request, response: Response) {
+    try {
+      const { id, oldpassword, newpassword } = request.body;
+
+      if (!oldpassword || !newpassword) {
+        return response.status(500).json("Field is missing");
+      }
+
+      const userUseCase = new UserUseCase();
+      const result = await userUseCase.updatePassword(id, oldpassword, newpassword);
+
+      if (result instanceof Error) {
+        return response.status(400).json(result.message);
+      }
+
+      return null;
     } catch (error) {
       console.log(error);
       return response.status(500).json(error);

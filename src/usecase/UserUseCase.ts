@@ -68,6 +68,18 @@ class UserUseCase {
       return new Error("User not found");
     }
 
+    const validateUsername = await userRepository.findOneBy({
+      userName: username,
+    });
+    const validateEmail = await userRepository.findOneBy({ email: email });
+
+    if (validateUsername && validateUsername.id != id) {
+      return new Error("Username is being used or is invalid");
+    }
+    if (validateEmail && validateEmail.id != id) {
+      return new Error("Email is being used or is invalid");
+    }
+
     try {
       userRepository.update;
       const result = await userRepository
@@ -80,10 +92,26 @@ class UserUseCase {
         .where("id = :id", { id: id })
         .execute();
 
-      return result;
+      if (result.affected != 1) {
+        return new Error("Error when updating");
+      }
+
+      const resultUpdate = await userRepository.findOneBy({ id: id });
+
+      const returnUser: InterfaceUserReturnResult = {
+        id: resultUpdate.id,
+        username: resultUpdate.userName,
+        email: resultUpdate.email,
+      };
+
+      return returnUser;
     } catch (error) {
       return new Error("Error save User");
     }
+  }
+
+  async updatePassword(id: string, oldpassword: string, newpassword: string) {
+    
   }
 }
 
