@@ -6,6 +6,10 @@ class UserController {
     try {
       const { username, email, password } = request.body;
 
+      if (!username || !email || !password) {
+        return response.status(500).json({ error: "Field is missing" });
+      }
+
       const userUseCase = new UserUseCase();
       const result = await userUseCase.createUser({
         username: username,
@@ -29,7 +33,7 @@ class UserController {
       const { id, username, email } = request.body;
 
       if (!id || !email || !username) {
-        return response.status(500).json("Field is missing");
+        return response.status(500).json({ error: "Field is missing" });
       }
 
       const userUseCase = new UserUseCase();
@@ -51,7 +55,7 @@ class UserController {
       const { id, oldpassword, newpassword } = request.body;
 
       if (!id || !oldpassword || !newpassword) {
-        return response.status(500).json("Field is missing");
+        return response.status(500).json({ error: "Field is missing" });
       }
 
       const userUseCase = new UserUseCase();
@@ -76,19 +80,18 @@ class UserController {
     try {
       const { id } = request.body;
 
-      if(!id) {
-        return response.status(500).json("Field is missing");
+      if (!id) {
+        return response.status(500).json({ error: "Field is missing" });
       }
 
       const userUseCase = new UserUseCase();
-      const result = await userUseCase.getUser(id) 
+      const result = await userUseCase.getUser(id);
 
       if (result instanceof Error) {
         return response.status(500).json(result.message);
       }
-      
+
       return response.status(201).json(result);
-      
     } catch (error) {
       console.log(error);
       return response.status(500).json(error);

@@ -15,8 +15,6 @@ routes.post("/login", authenticate.authentication);
 routes.post("/register", userController.createUser); // criando usuario
 routes.post("/refresh-token", refreshToken.refreshToken);
 
-
-
 // Necessidade de login
 routes.get("/user", userController.getUser); // pegando informações do usuario usuario
 
