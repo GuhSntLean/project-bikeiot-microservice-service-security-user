@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import { UserProvider } from "../provider/UserProvider";
 import { userRepository } from "../repository/UserRepository";
 import {
@@ -43,14 +43,14 @@ class UserUseCase {
 
       await userRepository.save(newUser);
 
-      await serverAmqp.start();
-      await serverAmqp.publishExchange("common.user", JSON.stringify(newUser));
-
       const returnUser: InterfaceUserReturnResult = {
         id: newUser.id,
         username: newUser.userName,
         email: newUser.email,
       };
+
+      await serverAmqp.start();
+      await serverAmqp.publishExchange("common.user", JSON.stringify(returnUser));
 
       return returnUser;
     } catch (error) {
@@ -81,7 +81,6 @@ class UserUseCase {
     }
 
     try {
-      userRepository.update;
       const result = await userRepository
         .createQueryBuilder()
         .update(User)
@@ -104,6 +103,9 @@ class UserUseCase {
         email: resultUpdate.email,
       };
 
+      await serverAmqp.start();
+      await serverAmqp.publishExchange("common.user", JSON.stringify(returnUser));
+
       return returnUser;
     } catch (error) {
       return new Error("Error save User");
@@ -111,7 +113,75 @@ class UserUseCase {
   }
 
   async updatePassword(id: string, oldpassword: string, newpassword: string) {
-    
+    const providerValidation = new UserProvider();
+
+    const user = await userRepository.findOneBy({ id: id });
+
+    if (!user) {
+      return new Error("User not found");
+    }
+
+    const passwordPass = await compare(oldpassword, user.password);
+
+    if (!passwordPass) {
+      return new Error("Password is invalid");
+    }
+
+    if (
+      oldpassword == newpassword ||
+      !providerValidation.passwordValidation(newpassword)
+    ) {
+      return new Error("Password is invalid");
+    }
+
+    try {
+      const newPassoworsdCrypt = await hash(newpassword, 8);
+
+      const result = await userRepository
+        .createQueryBuilder()
+        .update(User)
+        .set({
+          password: newPassoworsdCrypt || user.password,
+        })
+        .where("id = :id", { id: id })
+        .execute();
+
+      if (result.affected != 1) {
+        return new Error("Error when updating");
+      }
+
+      const update = await userRepository.findOneBy({ id: id });
+
+      const resultUpdate = {
+        id: update.id,
+        update: true,
+      };
+
+      return resultUpdate;
+    } catch (error) {
+      return new Error("Update error");
+    }
+  }
+
+  async getUser(iduser: string) {
+    try {
+      const user = await userRepository.findOneBy({ id: iduser });
+
+      if(!user){
+        return new Error("User not found");
+      }
+
+      const returnUser: InterfaceUserReturnResult = {
+        id: user.id,
+        username: user.userName,
+        email: user.email,
+      };
+
+      return returnUser
+
+    } catch (error) {
+      return new Error("Find error");
+    }
   }
 }
 
