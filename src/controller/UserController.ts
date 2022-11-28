@@ -97,6 +97,23 @@ class UserController {
       return response.status(500).json(error);
     }
   }
+
+  async listUser(request: Request, response: Response) {
+    try {
+     
+      const userUseCase = new UserUseCase();
+      const result = await userUseCase.getListUser();
+
+      if (result instanceof Error) {
+        return response.status(500).json(result.message);
+      }
+
+      return response.status(201).json(result);
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json(error);
+    }
+  }
 }
 
 export { UserController };

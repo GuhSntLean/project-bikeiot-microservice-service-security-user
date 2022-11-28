@@ -183,6 +183,20 @@ class UserUseCase {
       return new Error("Find error");
     }
   }
+
+  async getListUser() {
+    // const users = await adminRepository.find();
+    try {
+      const users = await userRepository
+        .createQueryBuilder("user")
+        .select("user.id, user.user_name as username, user.email")
+        .getRawMany();
+
+      return users;
+    } catch (error) {
+      return new Error("Find Error");
+    }
+  }
 }
 
 export { UserUseCase };
