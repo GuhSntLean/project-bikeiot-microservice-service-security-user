@@ -7,7 +7,7 @@ import { RefreshTokenProvider } from "../provider/RefreshTokenProvider";
 class AuthenticateUserController {
   async authentication(request: Request, response: Response) {
     const { username, password } = request.body;
-    console.log("Entrou");
+
     if (!username && !password) {
       return response
         .status(401)
@@ -25,7 +25,6 @@ class AuthenticateUserController {
         intefaceLogin
       );
 
-      console.log(userId);
       if (!(typeof userId === "string")) {
         return response.status(401).json({ error: userId.message });
       }

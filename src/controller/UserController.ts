@@ -7,7 +7,7 @@ class UserController {
       const { username, email, password } = request.body;
 
       if (!username || !email || !password) {
-        return response.status(500).json({ error: "Field is missing" });
+        return response.status(400).json({ error: "Field is missing" });
       }
 
       const userUseCase = new UserUseCase();
@@ -18,13 +18,13 @@ class UserController {
       });
 
       if (result instanceof Error) {
-        return response.status(400).json(result.message);
+        return response.status(400).json({error: result.message});
       }
 
       return response.status(201).json(result);
     } catch (error) {
       console.log(error);
-      return response.json(error);
+      return response.status(500).json({error: error});
     }
   }
 
@@ -33,20 +33,20 @@ class UserController {
       const { id, username, email } = request.body;
 
       if (!id || !email || !username) {
-        return response.status(500).json({ error: "Field is missing" });
+        return response.status(400).json({ error: "Field is missing" });
       }
 
       const userUseCase = new UserUseCase();
       const result = await userUseCase.updateUser(id, { username, email });
 
       if (result instanceof Error) {
-        return response.status(400).json(result.message);
+        return response.status(400).json({error: result.message});
       }
 
       return response.status(201).json(result);
     } catch (error) {
       console.log(error);
-      return response.status(500).json(error);
+      return response.status(500).json({error: error.message});
     }
   }
 
@@ -55,7 +55,7 @@ class UserController {
       const { id, oldpassword, newpassword } = request.body;
 
       if (!id || !oldpassword || !newpassword) {
-        return response.status(500).json({ error: "Field is missing" });
+        return response.status(400).json({ error: "Field is missing" });
       }
 
       const userUseCase = new UserUseCase();
@@ -66,13 +66,13 @@ class UserController {
       );
 
       if (result instanceof Error) {
-        return response.status(400).json(result.message);
+        return response.status(400).json({error: result.message});
       }
 
       return response.status(201).json(result);
     } catch (error) {
       console.log(error);
-      return response.status(500).json(error);
+      return response.status(500).json({error: error.message});
     }
   }
 
@@ -81,20 +81,20 @@ class UserController {
       const { id } = request.body;
 
       if (!id) {
-        return response.status(500).json({ error: "Field is missing" });
+        return response.status(400).json({ error: "Field is missing" });
       }
 
       const userUseCase = new UserUseCase();
       const result = await userUseCase.getUser(id);
 
       if (result instanceof Error) {
-        return response.status(500).json(result.message);
+        return response.status(400).json({error: result.message});
       }
 
       return response.status(201).json(result);
     } catch (error) {
       console.log(error);
-      return response.status(500).json(error);
+      return response.status(500).json({error: error.message});
     }
   }
 
@@ -105,13 +105,13 @@ class UserController {
       const result = await userUseCase.getListUser();
 
       if (result instanceof Error) {
-        return response.status(500).json(result.message);
+        return response.status(400).json({error: result.message});
       }
 
       return response.status(201).json(result);
     } catch (error) {
       console.log(error);
-      return response.status(500).json(error);
+      return response.status(500).json({error: error.message});
     }
   }
 }

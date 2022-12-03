@@ -6,14 +6,15 @@ import {
   InterfaceUserUpdate,
   InterfaceUserReturnResult,
 } from "../interfaces/InterfaceUser";
+import { validate } from "uuid";
 import { User } from "../models/User";
 import { RabbitmqServer } from "../server/RabbitmqServer";
 class UserUseCase {
   async createUser({ username, email, password }: InterfaceUser) {
     // Verificando se o usuario existe com E-MAIL e USUARIO
     const serverAmqp = new RabbitmqServer();
-
     const providerValidation = new UserProvider();
+
     const existUserName = await userRepository.findOneBy({
       userName: username,
     });
@@ -27,7 +28,6 @@ class UserUseCase {
       return new Error("Email already exists or irregular");
     }
 
-    console.log(providerValidation.passwordValidation(password));
     if (!providerValidation.passwordValidation(password)) {
       return new Error("Password invalid format");
     }
@@ -50,7 +50,10 @@ class UserUseCase {
       };
 
       await serverAmqp.start();
-      await serverAmqp.publishExchange("common.user", JSON.stringify(returnUser));
+      await serverAmqp.publishExchange(
+        "common.user",
+        JSON.stringify(returnUser)
+      );
 
       return returnUser;
     } catch (error) {
@@ -61,9 +64,13 @@ class UserUseCase {
   async updateUser(id: string, { username, email }: InterfaceUserUpdate) {
     // TODO: validando com outro usuarios
     const serverAmqp = new RabbitmqServer();
+    const providerValidation = new UserProvider();
+
+    if (!validate(id)) {
+      return new Error("User not found");
+    }
 
     const user = await userRepository.findOneBy({ id: id });
-
     if (!user) {
       return new Error("User not found");
     }
@@ -76,7 +83,9 @@ class UserUseCase {
     if (validateUsername && validateUsername.id != id) {
       return new Error("Username is being used or is invalid");
     }
-    if (validateEmail && validateEmail.id != id) {
+
+    console.log(providerValidation.emailValidation(email));
+    if (validateEmail && validateEmail.id != id || !providerValidation.emailValidation(email)) {
       return new Error("Email is being used or is invalid");
     }
 
@@ -104,7 +113,10 @@ class UserUseCase {
       };
 
       await serverAmqp.start();
-      await serverAmqp.publishExchange("common.user", JSON.stringify(returnUser));
+      await serverAmqp.publishExchange(
+        "common.user",
+        JSON.stringify(returnUser)
+      );
 
       return returnUser;
     } catch (error) {
@@ -115,8 +127,11 @@ class UserUseCase {
   async updatePassword(id: string, oldpassword: string, newpassword: string) {
     const providerValidation = new UserProvider();
 
-    const user = await userRepository.findOneBy({ id: id });
+    if (!validate(id)) {
+      return new Error("User not found");
+    }
 
+    const user = await userRepository.findOneBy({ id: id });
     if (!user) {
       return new Error("User not found");
     }
@@ -164,10 +179,14 @@ class UserUseCase {
   }
 
   async getUser(iduser: string) {
+    if (!validate(iduser)) {
+      return new Error("User not found");
+    }
+
     try {
       const user = await userRepository.findOneBy({ id: iduser });
 
-      if(!user){
+      if (!user) {
         return new Error("User not found");
       }
 
@@ -177,10 +196,9 @@ class UserUseCase {
         email: user.email,
       };
 
-      return returnUser
-
+      return returnUser;
     } catch (error) {
-      return new Error("Find error");
+      return new Error("Not find user");
     }
   }
 
@@ -194,7 +212,7 @@ class UserUseCase {
 
       return users;
     } catch (error) {
-      return new Error("Find Error");
+      return new Error("Not find users");
     }
   }
 }
