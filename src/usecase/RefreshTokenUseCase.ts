@@ -4,7 +4,7 @@ import { validate } from "uuid";
 
 class RefreshTokenUseCase {
   async generateRefreshToken(userId: string) {
-    const existRefreshToken = refreshTokenRepository.find({
+    const existRefreshToken = await refreshTokenRepository.find({
       where: { userId: { id: userId } },
     });
 
