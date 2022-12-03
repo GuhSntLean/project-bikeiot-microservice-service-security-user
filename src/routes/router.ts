@@ -15,16 +15,44 @@ const refreshToken = new RefreshTokenController();
 
 const routes = Router();
 
-// Sem necessidade de login
+// Sem necessidade de login (Rotas sem segurança, pois são rotas de entrada)
 routes.post("/login", authenticate.authentication);
 routes.post("/refresh-token", refreshToken.refreshToken);
-
-// Necessidade de login
 routes.post("/user", userController.createUser);
-routes.put("/user", userController.updateUser);
-routes.get("/user", userController.getUser);
-routes.get("/list-user", userController.listUser);
 
-routes.put("/update-password", userController.changePassword);
+// Necessidade de login (Rotas com segurança, pois necessita de credencial e Token para continar)
+// Rotas para o usuario comum 
+routes.put(
+  "/user",
+  authenticatedUserMiddleware.ensureAuthenticated,
+  userController.updateUser
+);
+routes.get(
+  "/user",
+  authenticatedUserMiddleware.ensureAuthenticated,
+  userController.getUser
+);
+routes.get(
+  "/list-user",
+  authenticatedUserMiddleware.ensureAuthenticated,
+  userController.listUser
+);
+routes.put(
+  "/update-password",
+  authenticatedUserMiddleware.ensureAuthenticated,
+  userController.changePassword
+);
+
+// Rotas para o usuario administrador
+routes.get(
+  "/get-user",
+  authenticatedAdminMiddleware.ensureAuthenticated,
+  userController.getUser
+);
+routes.get(
+  "/get-list-user",
+  authenticatedAdminMiddleware.ensureAuthenticated,
+  userController.listUser
+);
 
 export default routes;
