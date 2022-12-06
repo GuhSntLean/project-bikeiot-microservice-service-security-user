@@ -27,16 +27,12 @@ routes.put(
   authenticatedUserMiddleware.ensureAuthenticated,
   userController.updateUser
 );
-routes.get(
-  "/user",
+routes.post(
+  "/get-user",
   authenticatedUserMiddleware.ensureAuthenticated,
   userController.getUser
 );
-routes.get(
-  "/list-user",
-  authenticatedUserMiddleware.ensureAuthenticated,
-  userController.listUser
-);
+
 routes.put(
   "/update-password",
   authenticatedUserMiddleware.ensureAuthenticated,
@@ -44,13 +40,13 @@ routes.put(
 );
 
 // Rotas para o usuario administrador
-routes.get(
-  "/get-user",
+routes.post(
+  "/get-user-id",
   authenticatedAdminMiddleware.ensureAuthenticated,
   userController.getUser
 );
-routes.get(
-  "/get-list-user",
+routes.post(
+  "/list-user",
   authenticatedAdminMiddleware.ensureAuthenticated,
   userController.listUser
 );

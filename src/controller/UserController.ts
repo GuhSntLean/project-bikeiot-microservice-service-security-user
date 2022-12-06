@@ -5,7 +5,7 @@ class UserController {
   async createUser(request: Request, response: Response) {
     try {
       const { username, email, password } = request.body;
-
+      
       if (!username || !email || !password) {
         return response.status(400).json({ error: "Field is missing" });
       }
@@ -79,6 +79,7 @@ class UserController {
   async getUser(request: Request, response: Response) {
     try {
       const { id } = request.body;
+      console.log(id);
 
       if (!id) {
         return response.status(400).json({ error: "Field is missing" });

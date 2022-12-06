@@ -23,7 +23,7 @@ class AuthenticatedUserMiddleware {
           message: "Invalid token",
         });
       }
-      
+
       next();
     } catch (error) {
       return response.status(401).json({
